@@ -1,4 +1,4 @@
-package aoc2021;
+package aoc2021.day1;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Day1 {
     public static void main(String[] args) {
 
-        String fileName = "src/aoc2021/day1.in";
+        String fileName = "src/aoc2021/day1/day1.in";
         ArrayList<Integer> numbers = new ArrayList<Integer>();
         try {
             File input = new File(fileName);
