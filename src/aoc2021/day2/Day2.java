@@ -13,7 +13,6 @@ public class Day2 {
 
     public static void main(String[] args) {
 
-        System.out.println(forward);
         // Task one
         int radius = 0, depth = 0, product;
         ArrayList<Integer> values = new ArrayList<>();
@@ -36,14 +35,15 @@ public class Day2 {
 
             // Read the file
             while (reader.hasNextLine()) {
+
                 // Read 1 line
                 line.setLength(0);
                 line.append(reader.nextLine());
-                PilotData commandLine = new PilotData(line.toString());
+                String[] lineArgs = line.toString().split("\\s+");
 
-                // Fill Arraylists of task one and two
-                String direction = commandLine.getCommand();
-                int value = commandLine.getValue();
+                // Fill Arraylists of both tasks with the correct values
+                String direction = lineArgs[0];
+                int value = Integer.valueOf(lineArgs[1]);
                 taskOne(values, direction, value);
                 taskTwo(valuesTwo, direction, value);
             }
