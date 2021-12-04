@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// Enum
 import static aoc2021.day2.Direction.*;
 
 
@@ -50,17 +51,20 @@ public class Day2 {
             System.out.println(FNFE.getMessage());
         }
 
-        // calculate product and output it of task one
+        // calculate product of task one
         radius = values.get(0);
         depth = values.get(1);
         product = radius * depth;
-        System.out.printf("Task 1: horizontal position(%d)*Depth(%d)=product(%d)\n", depth, radius, product);
+        int taskNumber = 1;
+        String format = "Task %d: horizontal position(%d)*Depth(%d)=product(%d)\n";
+        System.out.printf(format, taskNumber, depth, radius, product);
 
-        // calculate product and output it of task two
+        // calculate product of task two
         radius = valuesTwo.get(0);
         depth = valuesTwo.get(1);
         product = radius * depth;
-        System.out.printf("Task 2: horizontal position(%d)*Depth(%d)=product(%d)\n", depth, radius, product);
+        taskNumber = 2;
+        System.out.printf(format, taskNumber, depth, radius, product);
     }
 
 
