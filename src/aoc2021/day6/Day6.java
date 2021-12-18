@@ -1,16 +1,15 @@
 package aoc2021.day6;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Day6 {
 
-    final static int parentCycle = 6;
-    final static int childCycle = 8;
+    final static long parentCycle = 6;
+    final static long childCycle = 8;
+
     public static void main(String[] args) {
+        // read file
         String path = "src/aoc2021/day6/day6.txt";
         String[] input = new String[0];
         try (Scanner reader = new Scanner(new File(path))) {
@@ -19,49 +18,77 @@ public class Day6 {
             System.out.println(e.getMessage());
         }
 
-        List<Integer> inputAsNumbers = new ArrayList<>();
+        // TODO refactor List (used before) to Long[]
+        List<Long> inputAsNumbers = new ArrayList<>();
         for (int i = 0; i < input.length; i++) {
-            inputAsNumbers.add(Integer.valueOf(input[i]));
+            inputAsNumbers.add(Long.valueOf(input[i]));
         }
 
-        Integer[] testArray = new Integer[]{3,4,3,1,2};
+        Long[] testArray = new Long[]{3L, 4L, 3L, 1L, 2L};
 
+        long result;
         System.out.println("\nTest cases:");
-        int test = partOne(new ArrayList<>(Arrays.asList(testArray)), 80);
-        System.out.printf("test: %d\n", test);
+        result = partOne(new ArrayList<>(Arrays.asList(testArray)), 80);
+        System.out.printf("test: %d\n", result);
 
         System.out.println("\nPart one:");
-        int res1 = partOne(new ArrayList<>(inputAsNumbers), 80);
-        System.out.printf("res1: %d\n", res1);
+        result = partOne(new ArrayList<>(inputAsNumbers), 80);
+        System.out.printf("res1: %d\n", result);
 
         System.out.println("\nPart two:");
-        int res2 = partOne(new ArrayList<>(inputAsNumbers), 256);
-        System.out.printf("res2: %d\n", res2);
-
+        result = partOne(new ArrayList<>(inputAsNumbers), 256);
+        System.out.printf("res2: %d\n", result);
 
     }
 
-    public static int partOne(List<Integer> fishs, int totalDays) {
+    public static long partOne(List<Long> fishs, int totalDays) {
 
-        int initialSize = fishs.size();
-        int day = 0;
-//        System.out.printf("Initial state: %d\n", day);
-        while (day < totalDays) {
-            // go through each line
-            int size = fishs.size();
-            for (int i = 0; i < size; i++) {
-                int newLifespan = fishs.get(i) - 1;
-                if (newLifespan < 0) {
-                    newLifespan =parentCycle;
-                    fishs.add(childCycle);
-                }
-                fishs.set(i, newLifespan);
+        Map<Long, Long> parentCount = new HashMap<>();
+        Map<Long, Long> childrenCount = new HashMap<>();
+
+        // fill parentCount and childrenCount with default values
+        for (long i = 0; i <= childCycle; i++) {
+            if (i <= parentCycle) {
+                parentCount.put(i, 0L);
             }
-            day++;
-            System.out.printf("After %d days: %d\n", day, fishs.size());
-
+            childrenCount.put(i, 0L);
         }
-        return fishs.size();
 
+        // fill parentCount with initial amount of fishs per day left
+        for (Long fish : fishs) {
+            Long value = parentCount.get(fish);
+            parentCount.replace(fish, value + 1);
+        }
+
+
+        int day = 0;
+        while (day++ < totalDays) {
+            long newFish = parentCount.get(0L) + childrenCount.get(0L);
+            iterateFishCount(parentCount, parentCycle, newFish);
+            iterateFishCount(childrenCount,childCycle, newFish);
+        }
+
+        long totalFish = calculateFishCount(parentCount) + calculateFishCount(childrenCount);
+        return totalFish;
+
+    }
+
+    public static long calculateFishCount(Map<Long, Long> fishCount){
+        long total = 0;
+        // TODO possible to make generic, and let long be decided later?
+        for (Long fish :fishCount.values()) {
+            total += fish;
+        };
+        return total;
+    }
+
+    public static void iterateFishCount(Map<Long, Long> fishCount, long cycle, long newFish){
+        // decrease fish days
+        for (long i = 0; i < cycle; i++) {
+            long nextDays = fishCount.get(i+1);
+            fishCount.replace(i,nextDays);
+        }
+        // insert new/recurring fish
+        fishCount.replace(cycle, newFish);
     }
 }
